@@ -71,7 +71,7 @@ public class UserService {
         user.setPassword(userO.getPassword());
         user.setSecurity_questions(userO.getSecurity_questions());
         user.setSecurity_answer(userO.getSecurity_answer());
-
+        user.setRoles(userO.getRoles());
         return userDao.saveUser(user);
     }
 

@@ -1,11 +1,20 @@
 package com.ecommerce.user.controller;
 
+
 import com.ecommerce.user.model.AuthRequest;
+import com.ecommerce.user.model.AuthResponse;
 import com.ecommerce.user.model.User;
 import com.ecommerce.user.service.UserService;
+import com.ecommerce.user.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,14 +22,62 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/fasscio")
 public class UseController {
 
-    @Autowired
-    UserService userService;
+	  @Autowired
+	    private AuthenticationManager authenticationManager;
+	    @Autowired
+	    private JwtUtil jwtUtil;
+	    public static final String   TOKEN_STRING  = "Authorization";
 
+	    @Autowired
+	    private UserDetailsService userDetailsService;
+	    
+	    @Autowired
+	    private UserService userService;
+	    @GetMapping("/hello")
+	    public String greet(){
+	        return "Hello";
+	    }
+	    @PostMapping("/user-validate/")
+	    public ResponseEntity<Object> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest){
+//	    	log.info("createAuthentication method started ");
+	        UsernamePasswordAuthenticationToken token=
+	                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword());
+
+	        authenticationManager.authenticate(token);
+	        System.out.println(authenticationRequest.getPassword());
+	        UserDetails userDetails=userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+	        System.out.println("-----"+userDetails);
+	        String jwt = jwtUtil.generateToken(userDetails);
+//	        log.debug("JWT-->",jwt);
+//	        log.info("createAuthentication method Ended ");
+	        return ResponseEntity.ok(new AuthResponse(jwt));
+
+
+
+
+	    }
+	    @PostMapping("/validate")
+	    public ResponseEntity<Object> validateToken(@RequestHeader(TOKEN_STRING) String token) throws UsernameNotFoundException {
+//	    	log.info("ValidateToken method started");
+	        UserDetails userDetails=userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
+	        try {
+	        		
+//	        	log.info("validateTokem method ended");
+	        		return new ResponseEntity<>(jwtUtil.validateToken(token,userDetails), HttpStatus.OK);
+	        }
+	        catch(Exception ex) {
+//	        	log.error("There is an error -->"+ex.getMessage());
+//	        	log.info("validateTokem method ended");
+	            return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+	        }
+	        
+	    }
+///---------------------------------------------------//
     @PostMapping("/save")
     public ResponseEntity<User> saveUser(@RequestBody User user){
 
-
-
+    	
+    	user.setRoles("ROLE_USER");
         if(userService.saveUser(user)!=null)
         {
 
@@ -29,45 +86,55 @@ public class UseController {
         return   ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/user-validate/")
-    public ResponseEntity<Void> validateUser(@RequestBody AuthRequest req){
 
-        if(userService.validateUser(req)!=null){
-
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    @GetMapping("/get")
+    public User  getUser(@RequestHeader(TOKEN_STRING) String token){
+        System.out.println(token);
+        if(token!=null && token.startsWith("Bearer")){
+            String jwt=token.substring(7);
+            String email = jwtUtil.extractUsername(jwt);
+	        if(userService.getUserByEmail(email)!=null){
+	            System.out.println(userService.getUserByEmail(email));
+	            return userService.getUserByEmail(email);
+	
+	        }
+	        return  null;
         }
-        else{
-            return ResponseEntity.notFound().build();
+        else {
+        	return null;
         }
     }
 
+    @PutMapping("/update")
+    public User  updateUser(@RequestHeader(TOKEN_STRING) String token,@RequestBody User user){
 
-    @GetMapping("/get/{email}")
-    public User  getUser(@PathVariable String email){
-        if(userService.getUserByEmail(email)!=null){
-            System.out.println(userService.getUserByEmail(email));
-            return userService.getUserByEmail(email);
+      
+        if(token!=null && token.startsWith("Bearer")){
+            String jwt=token.substring(7);
+            String email = jwtUtil.extractUsername(jwt);
 
-        }
-        return  null;
-    }
-
-    @PutMapping("/update/{email}")
-    public User  updateUser(@PathVariable String email,@RequestBody User user){
-
-        System.out.println("-------------------------"+user);
-
-        if(userService.updatePassword(email,user)!=null){
-
-            return userService.updatePassword(email,user);
+  
+            if(userService.updatePassword(email,user)!=null){
+            	
+            	return userService.updatePassword(email,user);
+            	
+            }
+            return null;
 
         }
         return null;
     }
-    @PutMapping("/updateAccount/{email}")
-    public User updateAccountDetails(@PathVariable String email, @RequestBody User user) {
-
-        return userService.updateUserAccount(email, user);
+    @PutMapping("/updateAccount")
+    public User updateAccountDetails(@RequestHeader(TOKEN_STRING) String token, @RequestBody User user) {
+        
+        if(token!=null && token.startsWith("Bearer")){
+            String jwt=token.substring(7);
+            String email = jwtUtil.extractUsername(jwt);
+            return userService.updateUserAccount(email, user);
+        }
+        else {
+        	return null;
+        }
 
     }
 

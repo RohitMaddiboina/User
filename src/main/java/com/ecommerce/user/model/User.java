@@ -3,6 +3,7 @@ package com.ecommerce.user.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Entity
 @Data
 @NoArgsConstructor
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +35,9 @@ public class User {
     private String landmark;
     private String security_questions;
     private String security_answer;
-
+    private String roles;
     public User(String firstName, String lastName, String email, String gender, Date dob, String password,
                 String phone, String houseNo, String street, String city, String district, String state, int pincode,
-                String landmark, String security_questions, String security_answer) {
+                String landmark, String security_questions, String security_answer,String roles) {
         super();
     }}
