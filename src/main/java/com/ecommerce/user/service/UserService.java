@@ -2,6 +2,7 @@ package com.ecommerce.user.service;
 
 import com.ecommerce.user.dao.UserDao;
 import com.ecommerce.user.model.AuthRequest;
+import com.ecommerce.user.model.PasswordEntity;
 import com.ecommerce.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,25 +45,34 @@ public class UserService {
 
             return null;
         } else {
+        	
             return user;
         }
 
     }
 
+    public boolean validateHint(String email,String que,String ans) {
+    	User user = getUserByEmail(email);
+    	if(user!=null) {
+    		if(user.getSecurity_questions().equals(que) && user.getSecurity_answer().equals(ans)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
-    public User updatePassword(String email, User user) {
-        if (user == null) {
-
-            return null;
-        } else {
-            User userDetails = userDao.getUserByEmail(email);
-
-            userDetails.setPassword(user.getPassword());
-
-            userDetails = userDao.saveUser(userDetails);
-
-            return userDetails;
+    public User updatePassword(String email, String password) {
+        if(!email.isEmpty() && !password.isEmpty()) {
+        	
+        	User userDetails = userDao.getUserByEmail(email);
+        	
+        	userDetails.setPassword(password);
+        	
+        	userDetails = userDao.saveUser(userDetails);
+        	
+        	return userDetails;
         }
+        return null;
     }
 
     public User updateUserAccount(String email, User user) {
