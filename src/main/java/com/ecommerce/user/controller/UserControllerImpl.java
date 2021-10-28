@@ -42,7 +42,6 @@ public class UserControllerImpl implements UserController {
 				authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		authenticationManager.authenticate(token);
-		System.out.println(authenticationRequest.getPassword());
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		System.out.println("-----" + userDetails);
 		String jwt = jwtUtil.generateToken(userDetails);
@@ -68,11 +67,11 @@ public class UserControllerImpl implements UserController {
 	@Override
 	public ResponseEntity<User> saveUser(@Valid @RequestBody User user, BindingResult bResult) {
 
-		if (bResult.hasErrors()) {
-
+		System.out.println(user.getEmail());
+		if (!bResult.hasErrors()) {		
 			user.setRoles("ROLE_USER");
 			if (userService.saveUser(user) != null) {
-
+				
 				return ResponseEntity.ok(user);
 			}
 		}

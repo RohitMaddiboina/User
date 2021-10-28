@@ -46,13 +46,15 @@ public class User {
     private String state;
     private int pincode;
     private String landmark;
-    private String security_questions;
-    private String security_answer;
+    @Column(name = "security_questions")
+    private String securityQuestions;
+    @Column(name="security_answer")
+    private String securityAnswer;
     private String roles;
     
 	public User(String firstName, String lastName, String email, String gender, Date dob, String password, String phone,
 			String houseNo, String street, String city, String district, String state, int pincode, String landmark,
-			String security_questions, String security_answer, String roles) {
+			String securityQuestions, String securityAnswer, String roles) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -68,8 +70,8 @@ public class User {
 		this.state = state;
 		this.pincode = pincode;
 		this.landmark = landmark;
-		this.security_questions = security_questions;
-		this.security_answer = security_answer;
+		this.securityQuestions = securityQuestions;
+		this.securityAnswer = securityAnswer;
 		this.roles = roles;
 	}
    

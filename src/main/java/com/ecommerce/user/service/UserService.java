@@ -17,8 +17,6 @@ public class UserService {
 
 
     public User saveUser(User user) {
-
-            System.out.println(getUserByEmail(user.getEmail()));
         if (getUserByEmail(user.getEmail()) == null) {
             User userToTransmit = userDao.saveUser(user);
             userToTransmit.setPassword("");
@@ -54,7 +52,7 @@ public class UserService {
     public boolean validateHint(String email,String que,String ans) {
     	User user = getUserByEmail(email);
     	if(user!=null) {
-    		if(user.getSecurity_questions().equals(que) && user.getSecurity_answer().equals(ans)) {
+    		if(user.getSecurityQuestions().equals(que) && user.getSecurityAnswer().equals(ans)) {
     			return true;
     		}
     	}
@@ -79,8 +77,8 @@ public class UserService {
         User userO = getUserByEmail(email);
         user.setId(userO.getId());
         user.setPassword(userO.getPassword());
-        user.setSecurity_questions(userO.getSecurity_questions());
-        user.setSecurity_answer(userO.getSecurity_answer());
+        user.setSecurityQuestions(userO.getSecurityQuestions());
+        user.setSecurityAnswer(userO.getSecurityAnswer());
         user.setRoles(userO.getRoles());
         return userDao.saveUser(user);
     }
