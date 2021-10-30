@@ -36,6 +36,7 @@ public class UserControllerImpl implements UserController {
 	@Autowired
 	private UserService userService;
 
+	//This is to create the JWT token and also to check user login
 	@Override
 	public ResponseEntity<Object> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) {
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -43,15 +44,14 @@ public class UserControllerImpl implements UserController {
 
 		authenticationManager.authenticate(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-		System.out.println("-----" + userDetails);
 		String jwt = jwtUtil.generateToken(userDetails);
        
 		return ResponseEntity.ok(new AuthResponse(jwt));
 
 	}
 
+	//This is to validate the token sent by other microservices to verify that the request is genuine
 	@Override
-
 	public ResponseEntity<Object> validateToken(@RequestHeader(TOKEN_STRING) String token)
 			throws UsernameNotFoundException {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
@@ -64,10 +64,10 @@ public class UserControllerImpl implements UserController {
 
 	}
 
+	//This is to save the user details
 	@Override
 	public ResponseEntity<User> saveUser(@Valid @RequestBody User user, BindingResult bResult) {
 
-		System.out.println(user.getEmail());
 		if (!bResult.hasErrors()) {		
 			user.setRoles("ROLE_USER");
 			if (userService.saveUser(user) != null) {
@@ -80,6 +80,7 @@ public class UserControllerImpl implements UserController {
 
 	}
 
+	//This is to get User details by using token
 	@Override
 	public ResponseEntity<User> getUser(@RequestHeader(TOKEN_STRING) String token) {
 
@@ -93,10 +94,11 @@ public class UserControllerImpl implements UserController {
 			}
 			return ResponseEntity.notFound().build();
 		} else {
-			return new ResponseEntity<User>(HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	}
 
+	//This is to validate the user hint during forgot password
 	@Override
 	public ResponseEntity<Void> validateHint(@PathVariable("email") String email, @PathVariable("que") String question,
 			@PathVariable("ans") String ans) {
@@ -109,6 +111,7 @@ public class UserControllerImpl implements UserController {
 
 	}
 
+	//This is to update the user password after submitting new password
 	@Override
 	public ResponseEntity<User> updateUser(@RequestBody PasswordEntity pwdEntity) {
 
@@ -122,6 +125,7 @@ public class UserControllerImpl implements UserController {
 
 	}
 
+	//This is to update the user after the editing the user details
 	@Override
 	public ResponseEntity<User> updateAccountDetails(@RequestHeader(TOKEN_STRING) String token,
 			@RequestBody User user) {
@@ -139,6 +143,30 @@ public class UserControllerImpl implements UserController {
 
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
+	}
+	
+	@Override
+	public ResponseEntity<Float> getUserWalletAmount(@RequestHeader(TOKEN_STRING) String token) {
+		if (token != null && token.startsWith("Bearer")) {
+			String jwt = token.substring(7);
+			String email = jwtUtil.extractUsername(jwt);
+			
+			return ResponseEntity.ok(userService.getUserWalletAmount(email));
+		}
+
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+
+	@Override
+	public ResponseEntity<Object> debitFromUserWallet(@RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
+		if (token != null && token.startsWith("Bearer")) {
+			String jwt = token.substring(7);
+			String email = jwtUtil.extractUsername(jwt);
+			
+			return ResponseEntity.ok(userService.debitFromUserWallet(email,amount));
+		}
+
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 
 }

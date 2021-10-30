@@ -27,8 +27,7 @@ class UserApplicationTests {
 	@Autowired
 	private MockMvc mock;
 
-	private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2hpdHRlamExOThAZ21haWwuY"
-			+ "29tIiwiZXhwIjoxNjM1NDMzNjg2LCJpYXQiOjE2MzUzNDcyODZ9.vyi2Q4i-BvLul073989Wr46sOrlmhIgs2nBVjhqk-Ec";
+	private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2hpdHRlamExOThAZ21haWwuY29tIiwiZXhwIjoxNjM1NTc1ODAwLCJpYXQiOjE2MzU0ODk0MDB9.a1fKF_GTvzHGw40dl6ZZihoHuJr2UBoN5VNW-nnqYXc";
 
 	@Test
 	void createAuthenticationToken() throws Exception {
@@ -47,7 +46,7 @@ class UserApplicationTests {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 		Date dob = format.parse("1998-01-24");
 		User user = new User("vamsi", "krishna", "posting@gmail.com", "male", dob, "password", "9550762955", "2-38/48",
-				"Barampeta", "guntur", "guntur", "Andhra", 522601, "landmark", "What is your favorite color?", "green",
+				"Barampeta", "guntur", "guntur", "Andhra", 522601, "landmark", "What is your favorite color?", "green",5000,
 				"role");
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -72,7 +71,7 @@ class UserApplicationTests {
 
 		User user = new User("krishna", "krishna", "rohitteja198@gmail.com", "male", dob, "password", "9550762955",
 				"2-38/48", "Barampeta", "guntur", "guntur", "Andhra", 522601, "landmark",
-				"What is your favorite color?", "green", "role");
+				"What is your favorite color?", "green", 5000,"role");
 
 		ObjectMapper mapper = new ObjectMapper();
 

@@ -2,7 +2,9 @@ package com.ecommerce.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -13,7 +15,8 @@ import java.util.Date;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @ToString
 public class User {
@@ -51,10 +54,11 @@ public class User {
     @Column(name="security_answer")
     private String securityAnswer;
     private String roles;
+    private float walletAmount;
     
 	public User(String firstName, String lastName, String email, String gender, Date dob, String password, String phone,
 			String houseNo, String street, String city, String district, String state, int pincode, String landmark,
-			String securityQuestions, String securityAnswer, String roles) {
+			String securityQuestions, String securityAnswer,float walletAmount, String roles) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -72,6 +76,7 @@ public class User {
 		this.landmark = landmark;
 		this.securityQuestions = securityQuestions;
 		this.securityAnswer = securityAnswer;
+		this.walletAmount = walletAmount;
 		this.roles = roles;
 	}
    

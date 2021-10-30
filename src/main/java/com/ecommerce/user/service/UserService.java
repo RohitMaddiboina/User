@@ -2,7 +2,6 @@ package com.ecommerce.user.service;
 
 import com.ecommerce.user.dao.UserDao;
 import com.ecommerce.user.model.AuthRequest;
-import com.ecommerce.user.model.PasswordEntity;
 import com.ecommerce.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class UserService {
     @Autowired
     UserDao userDao;
 
-
+    //To save user details during registration
     public User saveUser(User user) {
         if (getUserByEmail(user.getEmail()) == null) {
             User userToTransmit = userDao.saveUser(user);
@@ -26,6 +25,7 @@ public class UserService {
         }
     }
 
+    //This is to validate user login
     public User validateUser(AuthRequest req) {
         Optional<User> user = Optional.of(getUserByEmail(req.getUsername()));
 
@@ -37,6 +37,7 @@ public class UserService {
         }
     }
 
+    //This retrieves the User details by using email
     public User getUserByEmail(String email) {
         User user = userDao.getUserByEmail(email);
         if (user == null) {
@@ -49,6 +50,7 @@ public class UserService {
 
     }
 
+    //This is to validate the hint during forgot password
     public boolean validateHint(String email,String que,String ans) {
     	User user = getUserByEmail(email);
     	if(user!=null) {
@@ -59,6 +61,7 @@ public class UserService {
     	return false;
     }
 
+    //this is to update thte password during reset password
     public User updatePassword(String email, String password) {
         if(!email.isEmpty() && !password.isEmpty()) {
         	
@@ -73,6 +76,7 @@ public class UserService {
         return null;
     }
 
+    //This is to update the user details when user edits his/her details
     public User updateUserAccount(String email, User user) {
         User userO = getUserByEmail(email);
         user.setId(userO.getId());
@@ -82,6 +86,20 @@ public class UserService {
         user.setRoles(userO.getRoles());
         return userDao.saveUser(user);
     }
+    
+    public float getUserWalletAmount(String email) {
+		return getUserByEmail(email).getWalletAmount();
+	}
+
+	public Object debitFromUserWallet(String email, float amount) {
+		User u=getUserByEmail(email);
+		if(u.getWalletAmount()>amount) {
+			u.setWalletAmount(u.getWalletAmount()-amount);
+			userDao.saveUser(u);
+			return true;
+		}
+		return false;
+	}
 
 }
 
