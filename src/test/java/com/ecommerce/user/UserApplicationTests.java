@@ -51,8 +51,7 @@ class UserApplicationTests {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonData = mapper.writeValueAsString(user);
-		mock.perform(post("/fasscio/save").content(jsonData).contentType("application/json").header("Authorization",
-				"Bearer " + token)).andExpect(status().isOk()).andExpect(jsonPath("$").exists());
+		mock.perform(post("/fasscio/save").content(jsonData).contentType("application/json")).andExpect(status().isOk()).andExpect(jsonPath("$").exists());
 
 	}
 

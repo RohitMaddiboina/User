@@ -37,6 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	http.headers().frameOptions().disable();
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/fasscio/user-validate/").permitAll()
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .antMatchers("/fasscio/validate").permitAll()
                 .antMatchers("/fasscio/hint/**").permitAll()
                 .antMatchers("/fasscio/update").permitAll()
