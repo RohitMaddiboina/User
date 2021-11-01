@@ -42,6 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/fasscio/update").permitAll()
                 .antMatchers("/fasscio/save").permitAll()
                 .antMatchers("/h2/**").permitAll()
+                .antMatchers("/v2/**/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         
