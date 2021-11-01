@@ -33,12 +33,12 @@ public class UserApplication {
 	{
 	return new ApiInfo(
 	"User Microservice API",
-	"User Microservice interacts with Item Microservice and order Microservice \r\n" +
+	"User Microservice holds the security configuration  \r\n" +
 	" \r\n" +
 	"• User can signup or can do registration process \r\n" +
-	"• User microservice provides forgot password fields \r\n" +
-	"• User can update Email verifications \r\n" +
-	"• User microservice validates the user details \r\n" ,
+	"• User microservice provides reset password option \r\n" +
+	"• User can login using username and password \r\n" +
+	"• User microservice validates the user details and get user wallet amount \r\n" ,
 	"1.0",
 	"©Copyright Application",
 	new springfox.documentation.service.Contact("Fassico", "https://Fassico.com", "Fassico@gmail.com"),
