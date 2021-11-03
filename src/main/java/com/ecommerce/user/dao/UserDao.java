@@ -16,7 +16,8 @@ public class UserDao {
 
     public User saveUser(User user) {
 
-
+//    		User u=userRepo.save(new User());
+//    		u=user;
             return userRepo.save(user);
 
     }

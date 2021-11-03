@@ -101,5 +101,15 @@ public class UserService {
 		return false;
 	}
 
+	public User creditToUserWallet(String email, float amount) {
+		User user=userDao.getUserByEmail(email);
+		if(user==null) {
+			
+		}else {
+			user.setWalletAmount(user.getWalletAmount()+amount);
+		}
+		return userDao.saveUser(user);
+	}
+
 }
 

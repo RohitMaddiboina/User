@@ -70,7 +70,9 @@ public class UserControllerImpl implements UserController {
 	public ResponseEntity<User> saveUser(@Valid @RequestBody User user, BindingResult bResult) {
 
 		if (!bResult.hasErrors()) {		
+			System.out.println(user);
 			user.setRoles("ROLE_USER");
+			user.setWalletAmount(10000);
 			if (userService.saveUser(user) != null) {
 				
 				return ResponseEntity.ok(user);
@@ -165,6 +167,17 @@ public class UserControllerImpl implements UserController {
 			String email = jwtUtil.extractUsername(jwt);
 			
 			return ResponseEntity.ok(userService.debitFromUserWallet(email,amount));
+		}
+
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+
+	@Override
+	public ResponseEntity<User> addAmountToUserWallet(@RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
+		if (token != null && token.startsWith("Bearer")) {
+			String jwt = token.substring(7);
+			String email = jwtUtil.extractUsername(jwt);
+			return new ResponseEntity<User>(userService.creditToUserWallet(email,amount),HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);

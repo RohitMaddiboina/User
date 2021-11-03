@@ -24,10 +24,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class UserApplicationTests {
 
-	@Autowired
+	@Autowired 
 	private MockMvc mock;
 
-	private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2hpdHRlamExOThAZ21haWwuY29tIiwiZXhwIjoxNjM1NTc1ODAwLCJpYXQiOjE2MzU0ODk0MDB9.a1fKF_GTvzHGw40dl6ZZihoHuJr2UBoN5VNW-nnqYXc";
+	private static final String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb2hpdHRlamExOThAZ21haWwuY29tIiwiZXhwIjoxNjM2MDMzNzE5LCJpYXQiOjE2MzU3NzQ1MTl9.TP3qQilvCG9O2nDUx74rfcXlWj8yljWNMsMVrRacAJQ";
 
 	@Test
 	void createAuthenticationToken() throws Exception {

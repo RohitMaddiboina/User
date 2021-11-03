@@ -44,6 +44,8 @@ public interface UserController {
 	@PutMapping("/debit/{amount}")
 	public ResponseEntity<Object> debitFromUserWallet(String token,float amount);
 	
+	@PutMapping("/cedit/{amount}")
+	public ResponseEntity<User> addAmountToUserWallet(String token,float amount);
 	
 
 }
