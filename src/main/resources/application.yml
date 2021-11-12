@@ -1,8 +1,5 @@
-
 spring:
+  application:
+      name: user-service
   profiles:
     active: dev
-    application:
-      name: userService
-
-

@@ -5,16 +5,20 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ecommerce.user.model.AuthRequest;
 import com.ecommerce.user.model.PasswordEntity;
 import com.ecommerce.user.model.User;
 
+
+@RequestMapping("/fasscio")
 public interface UserController {
 
 	@PostMapping("/user-validate/")
