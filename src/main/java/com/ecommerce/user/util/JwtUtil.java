@@ -14,7 +14,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+    private final long TOKEN_EXPIRATION_TIME;
 
+    public JwtUtil( @Value("${jwt.token-validity-in-seconds}") long TOKEN_EXPIRATION_TIME) {
+        super();
+        this.TOKEN_EXPIRATION_TIME = TOKEN_EXPIRATION_TIME;
+    }
     private static final String SECRETKEY = "SECRET";
 
     public String extractUsername(String token) {
@@ -51,7 +56,7 @@ public class JwtUtil {
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 *72))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRETKEY).compact();
     }
     public Boolean validateToken(String token,UserDetails userDetails) {
