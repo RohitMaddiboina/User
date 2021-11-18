@@ -18,10 +18,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:4200")
-@CrossOrigin
+//@CrossOrigin
 public class UserControllerImpl implements UserController {
 
 	@Autowired
@@ -52,7 +53,7 @@ public class UserControllerImpl implements UserController {
 
 	//This is to validate the token sent by other microservices to verify that the request is genuine
 	@Override
-	public ResponseEntity<Object> validateToken(@RequestHeader(TOKEN_STRING) String token)
+	public ResponseEntity<Object> validateToken(@ApiIgnore @RequestHeader(TOKEN_STRING) String token)
 			throws UsernameNotFoundException {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
 		try {
@@ -84,7 +85,7 @@ public class UserControllerImpl implements UserController {
 
 	//This is to get User details by using token
 	@Override
-	public ResponseEntity<User> getUser(@RequestHeader(TOKEN_STRING) String token) {
+	public ResponseEntity<User> getUser(@ApiIgnore @RequestHeader(TOKEN_STRING) String token) {
 
 		if (token != null && token.startsWith("Bearer")) {
 			String jwt = token.substring(7);
@@ -102,7 +103,7 @@ public class UserControllerImpl implements UserController {
 
 	//This is to validate the user hint during forgot password
 	@Override
-	public ResponseEntity<Void> validateHint(@PathVariable("email") String email, @PathVariable("que") String question,
+	public ResponseEntity<Void> validateHint(@ApiIgnore @PathVariable("email") String email, @PathVariable("que") String question,
 			@PathVariable("ans") String ans) {
 		question = question + '?';
 		if (userService.validateHint(email, question, ans)) {
@@ -115,7 +116,7 @@ public class UserControllerImpl implements UserController {
 
 	//This is to update the user password after submitting new password
 	@Override
-	public ResponseEntity<User> updateUser(@RequestBody PasswordEntity pwdEntity) {
+	public ResponseEntity<User> updateUser(@ApiIgnore @RequestBody PasswordEntity pwdEntity) {
 
 		User userUpdated = userService.updatePassword(pwdEntity.getEmail(), pwdEntity.getPassword());
 		if (userUpdated != null) {
@@ -129,7 +130,7 @@ public class UserControllerImpl implements UserController {
 
 	//This is to update the user after the editing the user details
 	@Override
-	public ResponseEntity<User> updateAccountDetails(@RequestHeader(TOKEN_STRING) String token,
+	public ResponseEntity<User> updateAccountDetails(@ApiIgnore @RequestHeader(TOKEN_STRING) String token,
 			@RequestBody User user) {
 
 		if (token != null && token.startsWith("Bearer")) {
@@ -148,7 +149,7 @@ public class UserControllerImpl implements UserController {
 	}
 	
 	@Override
-	public ResponseEntity<Float> getUserWalletAmount(@RequestHeader(TOKEN_STRING) String token) {
+	public ResponseEntity<Float> getUserWalletAmount(@ApiIgnore @RequestHeader(TOKEN_STRING) String token) {
 		if (token != null && token.startsWith("Bearer")) {
 			String jwt = token.substring(7);
 			String email = jwtUtil.extractUsername(jwt);
@@ -160,7 +161,7 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
-	public ResponseEntity<Object> debitFromUserWallet(@RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
+	public ResponseEntity<Object> debitFromUserWallet(@ApiIgnore @RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
 		if (token != null && token.startsWith("Bearer")) {
 			String jwt = token.substring(7);
 			String email = jwtUtil.extractUsername(jwt);
@@ -172,7 +173,7 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
-	public ResponseEntity<User> addAmountToUserWallet(@RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
+	public ResponseEntity<User> addAmountToUserWallet(@ApiIgnore @RequestHeader(TOKEN_STRING) String token,@PathVariable float amount) {
 		if (token != null && token.startsWith("Bearer")) {
 			String jwt = token.substring(7);
 			String email = jwtUtil.extractUsername(jwt);

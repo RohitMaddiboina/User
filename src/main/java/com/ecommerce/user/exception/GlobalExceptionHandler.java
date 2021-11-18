@@ -3,6 +3,7 @@ package com.ecommerce.user.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,17 @@ import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
+	private final String s;
+
+	public GlobalExceptionHandler(@Value("${string.exceptionValue}")String s) {
+	super();
+	this.s = s;
+	}
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		List<String> details = new ArrayList<String>();
-		details.add("Required request body is missing");
+		details.add(s);
 		return new ResponseEntity<Object>(details, status);
 	}
 
