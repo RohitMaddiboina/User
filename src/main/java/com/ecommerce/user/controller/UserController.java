@@ -1,5 +1,8 @@
 package com.ecommerce.user.controller;
 
+import java.io.IOException;
+import java.sql.Blob;
+
 import org.springframework.http.ResponseEntity;
 
 
@@ -12,8 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.user.model.AuthRequest;
+import com.ecommerce.user.model.ImageModel;
 import com.ecommerce.user.model.PasswordEntity;
 import com.ecommerce.user.model.User;
 
@@ -51,5 +57,10 @@ public interface UserController {
 	@PutMapping("/cedit/{amount}")
 	public ResponseEntity<User> addAmountToUserWallet(String token,float amount);
 	
-
+	@GetMapping("/profilePicture")
+	public ResponseEntity<ImageModel> getProfilePicture(String token);
+	
+	@PutMapping(value="/profilePicture")
+	public ResponseEntity<Void> updateProfilePicture(String token,MultipartFile profilePicture) throws IOException;
+	
 }

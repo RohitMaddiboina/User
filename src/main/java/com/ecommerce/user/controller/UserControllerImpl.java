@@ -2,10 +2,18 @@ package com.ecommerce.user.controller;
 
 import com.ecommerce.user.model.AuthRequest;
 import com.ecommerce.user.model.AuthResponse;
+import com.ecommerce.user.model.ImageModel;
 import com.ecommerce.user.model.PasswordEntity;
 import com.ecommerce.user.model.User;
 import com.ecommerce.user.service.UserService;
 import com.ecommerce.user.util.JwtUtil;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.IOException;
+import java.sql.Blob;
+import java.util.zip.Deflater;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +26,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -183,4 +193,34 @@ public class UserControllerImpl implements UserController {
 		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 
+	@Override
+	public ResponseEntity<ImageModel> getProfilePicture(@RequestHeader(TOKEN_STRING) String token) {
+		// TODO Auto-generated method stub
+		if (token != null && token.startsWith("Bearer")) {
+			String jwt = token.substring(7);
+			String email = jwtUtil.extractUsername(jwt);
+			
+			ImageModel imageModel = userService.getProfilePicture(email);
+			if(imageModel==null) {
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+			return new ResponseEntity<>(imageModel,HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+	@Override
+	public ResponseEntity<Void> updateProfilePicture(@RequestHeader(TOKEN_STRING) String token ,@RequestParam("image") MultipartFile profilePicture) throws IOException {
+		// TODO Auto-generated method stub
+		if (token != null && token.startsWith("Bearer")) {
+			String jwt = token.substring(7);
+			String email = jwtUtil.extractUsername(jwt);
+			userService.updateProfilePicture(email, profilePicture);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+	}
+
+	
 }

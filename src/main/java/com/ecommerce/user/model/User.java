@@ -58,6 +58,9 @@ public class User {
     private String roles;
     private float walletAmount;
     
+    @Column(length = 16777215, columnDefinition = "LONGBLOB" ) 
+    private byte[] profilePic;
+    
 	public User(String firstName, String lastName, String email, String gender, Date dob, String password, String phone,
 			String houseNo, String street, String city, String district, String state, int pincode, String landmark,
 			String securityQuestions, String securityAnswer,float walletAmount, String roles) {

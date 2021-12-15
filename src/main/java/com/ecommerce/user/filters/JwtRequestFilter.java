@@ -48,7 +48,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(token);
             }
+            System.out.println("Hii---------------in secuirty");
         }
+        System.out.println("Hii---------------OUTSIDE secuirty");
 
         filterChain.doFilter(request,response);
 
